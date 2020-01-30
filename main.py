@@ -9,32 +9,34 @@ import tkinter as tk
 __version__ = "0.1.0"
 
 # main program
+def logger(input_txt):
+    txt_log.insert(tk.END, input_txt + "\n")     
 
 def main():        
     path_from_entry = pathlib.Path(entry.get())
     dir_zip = path_from_entry.joinpath('zip')
     dir_start = path_from_entry
-    if dir_zip.is_dir():
-        print("Directory already exists")
-    else:
-        print("Directory didn't exists")
-        pathlib.Path.mkdir(dir_zip)
-    print(f"Your current directory is: {dir_start}")    
+    if dir_zip.is_dir():        
+        logger("Directory already exists")
+    else:        
+        logger("Directory already exists")
+        pathlib.Path.mkdir(dir_zip)   
+    
     for path in dir_start.rglob('*.zip'):
         if path.parent != dir_zip:            
             try:
                 zf = zipfile.ZipFile(path)
                 zf.extractall(path.parent)
                 zf.close()            
-                source = str(path)  
-                print(source)          
+                source = str(path)                  
+                logger(source)
                 destination = str(dir_zip.joinpath(path.name))
-                print(destination)
-                shutil.move(source, destination)                
-            except:
-                print(f"Failed to unpack the archive: {path.name}")
+                logger(destination)
+                shutil.move(source, destination)
+            except:                
+                logger("Filed to unpack the archive: " + path.name)            
   
-if __name__ == "__main__":     
+if __name__ == "__main__":        
     dir_start = pathlib.Path.cwd().joinpath('test')
     dir_zip = pathlib.Path.cwd().joinpath('zip')
     # main()
@@ -60,6 +62,7 @@ if __name__ == "__main__":
     ent_zip = tk.Entry(master=frame, width=60)
     ent_zip.grid(row=3, column=0, padx=5, pady=5)
     ent_zip.insert(0, dir_zip)
-
+    txt_log = tk.Text(master=frame)
+    txt_log.grid(row=4, column=0, padx=5, pady=5)
 
     window.mainloop()
