@@ -132,3 +132,4 @@ dmypy.json
 
 # Program files for testing
 /test
+/zip
