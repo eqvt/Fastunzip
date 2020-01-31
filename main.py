@@ -17,7 +17,7 @@ def logger(input_txt, box=0):
 
 def main():        
     path_from_entry = pathlib.Path(entry.get())
-    dir_zip = path_from_entry.joinpath('zip')
+    dir_zip = pathlib.Path(ent_zip.get())    
     dir_start = path_from_entry
     if dir_zip.is_dir():        
         logger("Directory already exists")
