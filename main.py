@@ -13,7 +13,10 @@ def logger(input_txt, box=0):
     if box == 0:
         txt_log.insert(tk.END, input_txt + "\n")
     elif box == 1:
-        txt_arch.insert(tk.END, input_txt + "\n")     
+        txt_arch.insert(tk.END, input_txt + "\n")
+
+def clearlog():
+    txt_arch.delete('1.0', tk.END)
 
 def main():        
     path_from_entry = pathlib.Path(entry.get())
@@ -37,8 +40,23 @@ def main():
                 logger(destination)
                 shutil.move(source, destination)
             except:                
-                logger("Filed to unpack the archive: " + path.name)            
+                logger("Failed to unpack the archive: " + path.name)            
   
+def listThis():
+    path_from_entry = pathlib.Path(entry.get())
+    dir_dest = pathlib.Path(ent_zip.get())    
+    dir_start = path_from_entry
+    clearlog()
+    for path in dir_start.rglob('*.zip'):
+        if path.parent != dir_zip:            
+            try:
+                source = str(path)                  
+                logger(source, 1)
+                destination = str(dir_dest.joinpath(path.name))
+                logger(destination)                
+            except:                
+                logger("Failed to list archives " + path.name)     
+
 if __name__ == "__main__":        
     dir_start = pathlib.Path.cwd().joinpath('test')
     dir_zip = pathlib.Path.cwd().joinpath('zip')
@@ -60,6 +78,12 @@ if __name__ == "__main__":
                  command=main
                  )
     button.grid(row=1, column=1, padx=5, pady=5) 
+    button = tk.Button(
+                 text="List zips!",
+                 master=frame,
+                 command=listThis
+                 )
+    button.grid(row=2, column=1, padx=5, pady=5) 
 
     lbl_zip = tk.Label(text="Select directory to run store ZIPs: ", master=frame)
     lbl_zip.grid(row=2, column=0, padx=5, pady=5)
